@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans|Fenix' rel='stylesheet' type='text/css'>
+
+    <!-- build:css assets/css/main.css -->
+    <link rel="stylesheet" href="bower_components/reset-css/reset.css"/>
+    <link rel="stylesheet" href="assets/css/fontello.css"/>
+    <link rel="stylesheet" href="assets/css/map.css"/>
+    <link rel="stylesheet" href="assets/css/styles.css"/>
+    <!-- endbuild -->
+
+    <title>Autism Organization Search</title>
+</head>
+<body>
+<div class="preloader">
+    <div class="mask">
+    </div>
+    <div class="preloader-text">
+        <h1 class="preloader-text-line preloader-text-title preloader-text-line-1">Autism Organization Search</h1>
+        <p class="preloader-text-line preloader-text-line-2">Find Autism-related Service and Support nearby</p>
+        <div class="starter">
+            <div class="preloader-icon">
+                <div class="loading"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page-wrapper">
+    <header class="page-header">
+        <div class="container">
+            <a href="index.html" class="logo" title="return home"><i class="icon icon-location"></i><h1>Autism in Location</h1></a>
+            <div class="page-nav">
+                <ul>
+                    <li><a href="index.html" class="active">Organization Search</a></li>
+                    <li><a href="overview.html">Density Map</a></li>
+                    <li><a href="about.html">About Autism</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-main">
+        <div id="cd-google-map" class="map">
+            <!-- #google-container will contain the map  -->
+            <div id="google-container"></div>
+            <!-- #cd-zoom-in and #zoom-out will be used to create our custom buttons for zooming-in/out -->
+            <div class="search-state" >
+                <input placeholder="Enter a location" id="pac-input" type="text"/><a href="javascript:;" class="icon-search"></a>
+            </div>
+
+            <div id="cd-zoom-in"></div>
+            <div id="cd-zoom-out"></div>
+            <div id="cd-my-location"><i class="icon-target" title="search"></i></div>
+            <!--<address>86-90 Paul Street, London, EC2A 4NE</address>-->
+        </div>
+    </div>
+
+    <footer class="footer footer-map">
+        <div class="copyright">
+            © 2015 <a href="http://xiaoxuezhang.info/" target="_blank">Xiaoxue Zhang</a>
+            <span class="source">Data Source: <a href="http://www.autismsource.org/" target="_blank">Autism Source</a></span>
+        </div>
+    </footer>
+
+    <div class="filter" id="filter-service-type">
+        <h3 class="filter-title">
+            <span>Service Type</span> <a href="javascript:;" title="Full Descriptions of Service Types" class="help icon-help-circled"></a>
+            <a href="javascript:;" class="btn-clear clear">Clear</a>
+        </h3>
+        <div class="service-type">
+            <div id="select-service"></div>
+        </div>
+    </div>
+    <div class="panel panel-detail" id="panel-detail">
+        <div class="panel-cnt"></div>
+        <a class="icon-cancel-1 close" href="javascript:;"></a>
+    </div>
+    <div class="modal" id="service-type-help"></div>
+
+</div>
+
+<!--template begin-->
+<script type="text/html" id="tpl-info-content">
+    <div class="info-content">
+        <div class="project-name">
+            {{org[3]}}
+        </div>
+        <div class="project-service">
+            {{org[4]}}
+        </div>
+        <br/>
+        <p class="tip">Click the circle to see detail</p>
+    </div>
+</script>
+<script type="text/html" id="tpl-detail-content">
+    <header class="panel-header">
+        <h3 class="title">{{org.program}}</h3>
+    </header>
+    <div class="panel-main">
+        <section class="contact">
+            <h4 class="section-title">Contact</h4>
+            <div class="section-cnt">
+                <ul>
+                    {{if org.phone}}
+                    <li><i class="icon-mobile"></i> <span class="item-cnt">{{org.phone}}</span></li>
+                    {{/if}}
+                    {{if org.email}}
+                    <li><i class="icon-mail"></i> <a class="item-cnt" href="mailto:{{org.email}}">{{org.email}}</a></li>
+                    {{/if}}
+                    {{if org.website}}
+                    <li><i class="icon-link"></i> <a class="item-cnt" href="{{org.website}}" target="_blank">{{org.website}}</a></li>
+                    {{/if}}
+                    <li>
+                        <i class="icon-location"></i>
+                        <span class="item-cnt">
+                            <p>{{org.address}}, </p>
+                            <p>{{org.city}} {{org.state}}, {{org.zipcode}}</p>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        {{if org.org_type != ''}}
+        <section class="org-type">
+            <h4 class="section-title">Organization Type</h4>
+            <div class="section-cnt">
+                {{org.org_type}}
+            </div>
+        </section>
+        {{/if}}
+        <section class="service-offered">
+            <h4 class="section-title">Services Offered</h4>
+            <div class="section-cnt">
+                <p class="scope">
+                    {{if org.is_nation}}
+                    This organization serves nationwide
+                    {{/if}}
+                    {{if org.is_state}}
+                    This organization serves statewide
+                    {{/if}}
+                </p>
+                <p class="service-type">
+                    {{org.service_offered}}
+                </p>
+            </div>
+        </section>
+        {{if org.service != ''}}
+        <section class="service">
+            <h4 class="section-title">Service Description</h4>
+            <div class="section-cnt">
+                {{org.service}}
+            </div>
+        </section>
+        {{/if}}
+        {{if org.information != ''}}
+        <section class="information">
+            <h4 class="section-title">Program Information</h4>
+            <div class="section-cnt">
+                {{org.information}}
+            </div>
+        </section>
+        {{/if}}
+    </div>
+</script>
+<script type="text/html" id="tpl-select-service">
+    {{each data as $group $key}}
+        <div class="service-group {{if $key == 1}}active{{/if}}">
+            <a href="javascript:;" class="group-name">
+                <i class="icon-down-dir"></i>
+                <i class="icon-up-dir"></i>
+                <span class="name">{{$group[0].group_name}}</span>
+                <!--{{if $key == 1}}
+                <span class="selected-num">1</span>
+                {{else}}
+                <span class="selected-num"></span>
+                {{/if}}-->
+            </a>
+            <ul class="group-list">
+            {{each $group}}
+            <li>
+                <i class="icon-circle" data-color="{{colors[$value.index]}}" {{if $value.name == 'State Key Resources'}}style="color:{{colors[$index]}}"{{/if}}></i>
+                <input type="checkbox" data-id="{{$value.id}}" id="service-type-{{$value.id}}" title="{{$value.name}}" value="{{$value.name}}" {{if $value.name == 'State Key Resources'}}checked{{/if}}/><label for="service-type-{{$value.id}}">{{$value.name}}</label>
+            </li>
+            {{/each}}
+            </ul>
+        </div>
+    {{/each}}
+</script>
+<script type="text/html" id="tpl-service-type-help">
+    <div class="container">
+        <h3 class="modal-title">
+            Descriptions of Service Types
+        </h3>
+        <div class="modal-cnt">
+            <table>
+                {{each data as $group $key}}
+                {{each $group}}
+                <tr>
+                    <th>{{$value.name}}</th>
+                    <td>{{$value.description}}</td>
+                </tr>
+                {{/each}}
+                {{/each}}
+            </table>
+        </div>
+    </div>
+    <a class="icon-cancel-1 close" href="javascript:;"></a>
+</script>
+<!--template end-->
+
+
+<!-- build:js assets/js/plugins.js -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/nprogress/nprogress.js"></script>
+<script src="bower_components/artTemplate/dist/template.js"></script>
+<!-- endbuild -->
+<!-- build:js assets/js/main.js -->
+<script src="assets/js/main_map.js"></script>
+<script src="assets/js/main.js"></script>
+<!-- endbuild -->
+<script src="http://www.google.com/jsapi?key=AIzaSyDZyrmRF6CeudD-wclNCp8Ff-yfudDh86Q"></script>
+
+</body>
+</html>

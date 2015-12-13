@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans|Fenix' rel='stylesheet' type='text/css'>
+
+    <!-- build:css assets/css/overview.css -->
+    <link rel="stylesheet" href="bower_components/reset-css/reset.css"/>
+    <link rel="stylesheet" href="assets/css/fontello.css"/>
+    <link rel="stylesheet" href="assets/css/map.css"/>
+    <link rel="stylesheet" href="assets/css/styles.css"/>
+    <!-- endbuild -->
+
+    <title>Overview | Autism Organization Search</title>
+</head>
+<body>
+<div class="preloader">
+    <div class="mask">
+    </div>
+    <div class="preloader-icon">
+        <div class="loading"></div>
+    </div>
+</div>
+
+<div class="page-wrapper">
+    <header class="page-header">
+        <div class="container">
+            <a href="index.html" class="logo" title="return home"><i class="icon icon-location"></i><h1>Autism in Location</h1></a>
+            <div class="page-nav">
+                <ul>
+                    <li><a href="index.html">Organization Search</a></li>
+                    <li><a href="overview.html" class="active">Density Map</a></li>
+                    <li><a href="about.html">About Autism</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-main">
+        <div class="map-title">
+            <h2>Organization Density in U.S.</h2>
+        </div>
+        <div id="cd-google-map" class="map">
+            <!-- #google-container will contain the map  -->
+            <div id="google-container"></div>
+            <!-- #cd-zoom-in and #zoom-out will be used to create our custom buttons for zooming-in/out -->
+
+            <div id="cd-zoom-in"></div>
+            <div id="cd-zoom-out"></div>
+            <div id="legend" class="legend">
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer footer-map">
+        <div class="copyright">
+            © 2015 <a href="http://xiaoxuezhang.info/" target="_blank">Xiaoxue Zhang</a>
+            <span class="source">Data Source: <a href="http://www.autismsource.org/" target="_blank">Autism Source</a></span>
+        </div>
+    </footer>
+
+    <div class="filter" id="filter-service-type">
+        <h3 class="filter-title">
+            <span>Service Type</span> <a href="javascript:;" title="Full Descriptions of Service Types" class="help icon-help-circled"></a>
+            <a href="javascript:;" class="btn-clear clear">Clear</a>
+        </h3>
+        <div class="service-type">
+            <div id="select-service"></div>
+        </div>
+    </div>
+    <div class="panel panel-detail" id="panel-detail">
+        <div class="panel-cnt"></div>
+        <a class="icon-cancel-1 close" href="javascript:;"></a>
+    </div>
+    <div class="modal" id="service-type-help"></div>
+
+</div>
+
+<!--template begin-->
+<script type="text/html" id="tpl-info-content">
+    <div class="info-content">
+        <div class="state-name">
+            {{data.state}}
+        </div>
+        <div class="org-count">
+            <strong>{{data.count}}</strong> Organizations and Supports
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl-legend">
+    <div class="legend-title">Legend</div>
+    <div class="legend-subtitle">x = Organization Quantity</div>
+    <div class="legend-cnt">
+        <ul>
+            <li><i class="sign" style="border-color: {{strokeColor}}; background: {{colors[1]}}"></i> <span class="annotation">0 < x <= 500</span></li>
+            <li><i class="sign" style="border-color: {{strokeColor}}; background: {{colors[2]}}"></i> <span class="annotation">500 < x <= 1000</span></li>
+            <li><i class="sign" style="border-color: {{strokeColor}}; background: {{colors[3]}}"></i> <span class="annotation">1000 < x <= 1500</span></li>
+            <li><i class="sign" style="border-color: {{strokeColor}}; background: {{colors[4]}}"></i> <span class="annotation">1500 < x <= 2000</span></li>
+            <li><i class="sign" style="border-color: {{strokeColor}}; background: {{colors[5]}}"></i> <span class="annotation">2000 < x <= 2500</span></li>
+            <li><i class="sign" style="border-color: {{strokeColor}}; background: {{colors[6]}}"></i> <span class="annotation">x > 2500</span></li>
+        </ul>
+    </div>
+</script>
+<!--template end-->
+
+
+<!-- build:js assets/js/plugins.js -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/nprogress/nprogress.js"></script>
+<script src="bower_components/artTemplate/dist/template.js"></script>
+<!-- endbuild -->
+<!-- build:js assets/js/overview.js -->
+<script src="assets/js/overview_map.js"></script>
+<script src="assets/js/overview.js"></script>
+<!-- endbuild -->
+<script src="http://www.google.com/jsapi?key=AIzaSyDZyrmRF6CeudD-wclNCp8Ff-yfudDh86Q"></script>
+
+</body>
+</html>
